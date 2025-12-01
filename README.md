@@ -1,27 +1,47 @@
 # eRecipe
 
-Frontend application for the eRecipe e-commerce platform built with SvelteKit and Tailwind CSS.
-
 ## Tech Stack
 
 - **Framework:** SvelteKit
 - **Styling:** Tailwind CSS
 - **Language:** TypeScript
-- **Deployment:** Vercel
+- **Database:** Drizzle ORM (SQLite for dev, PostgreSQL/Neon/PlanetScale for production)
+- **Deployment:** Vercel (recommended)
 
 ## Setup
 
 1. Install dependencies:
 ```bash
+cd eRecipe
 npm install
 ```
 
-2. Run the development server:
+2. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+3. Initialize the database:
+```bash
+npm run db:generate
+npm run db:migrate
+```
+
+4. Run the development server:
 ```bash
 npm run dev
 ```
 
 The application will be available at `http://localhost:5173`
+
+## Database Management
+
+- **Generate migrations:** `npm run db:generate`
+- **Run migrations:** `npm run db:migrate`
+- **Open Drizzle Studio:** `npm run db:studio`
+
+See `src/lib/db/README.md` for detailed database setup instructions.
 
 ## Building for Production
 
@@ -29,4 +49,3 @@ The application will be available at `http://localhost:5173`
 npm run build
 npm run preview
 ```
-

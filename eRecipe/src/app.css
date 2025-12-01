@@ -2,3 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+	html {
+		scroll-behavior: smooth;
+	}
+
+	body {
+		@apply text-gray-800 antialiased;
+	}
+
+	* {
+		@apply transition-colors duration-200;
+	}
+}
+
+@layer utilities {
+	.text-balance {
+		text-wrap: balance;
+	}
+
+	/* Smooth scrolling for better UX */
+	@media (prefers-reduced-motion: no-preference) {
+		html {
+			scroll-behavior: smooth;
+		}
+	}
+
+	/* Custom scrollbar for webkit browsers */
+	::-webkit-scrollbar {
+		width: 10px;
+	}
+
+	::-webkit-scrollbar-track {
+		@apply bg-gray-100;
+	}
+
+	::-webkit-scrollbar-thumb {
+		@apply bg-primary rounded-full;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		@apply bg-primary-light;
+	}
+}

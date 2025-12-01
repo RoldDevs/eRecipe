@@ -1,48 +1,99 @@
 # eRecipe Backend
 
-Backend API for the eRecipe e-commerce application built with FastAPI.
+## Architecture
 
-## Tech Stack
-
-- **Framework:** FastAPI
-- **Database ORMs:** Prisma, Drizzle (to be configured)
-- **Database:** Neon/PlanetScale (to be configured)
-- **Deployment:** Railway, Fly.io
+- **FastAPI** (Port 8000): Main API gateway, can proxy to Drizzle API or handle Python-specific logic
+- **Drizzle API** (Port 3000): Node.js/Express server with Drizzle ORM for database operations
+- **Shared Database**: Both services use the same SQLite/PostgreSQL database
 
 ## Setup
 
-1. Create a virtual environment:
+### 1. Install Node.js Dependencies
+
 ```bash
-python -m venv venv
+cd Backend
+npm install
 ```
 
-2. Activate the virtual environment:
-```bash
-# Windows
-venv\Scripts\activate
+### 2. Set up Environment Variables
 
-# macOS/Linux
-source venv/bin/activate
+```bash
+cp .env.example .env
+# Edit .env with your configuration
 ```
 
-3. Install dependencies:
+### 3. Initialize Database
+
 ```bash
-pip install -r requirements.txt
+# Generate migrations
+npm run db:generate
+
+# Run migrations
+npm run db:migrate
+
+# (Optional) Open Drizzle Studio
+npm run db:studio
 ```
 
-4. Copy `.env.example` to `.env` and configure your environment variables:
+### 4. Start the Servers
+
+**Terminal 1 - Drizzle API (Node.js):**
 ```bash
-copy .env.example .env
+npm run dev
+# Runs on http://localhost:3000
 ```
 
-5. Run the development server:
+**Terminal 2 - FastAPI (Python):**
 ```bash
+# Activate virtual environment
+.\env\Scripts\activate  # Windows
+source env/bin/activate  # Linux/Mac
+
+# Run FastAPI
 uvicorn main:app --reload
+# Runs on http://localhost:8000
 ```
 
-The API will be available at `http://localhost:8000`
+## API Endpoints
 
-API documentation will be available at:
-- Swagger UI: `http://localhost:8000/docs`
-- ReDoc: `http://localhost:8000/redoc`
+### Drizzle API (Direct - Port 3000)
+- `GET /api/recipes` - Get all recipes
+- `GET /api/recipes/:id` - Get recipe by ID
+- `POST /api/recipes` - Create recipe
+- `GET /api/restaurants` - Get all restaurants
+- `GET /api/users` - Get all users
+- `GET /api/posts` - Get all posts
+- `GET /api/orders` - Get all orders
 
+### FastAPI (Proxy - Port 8000)
+- `GET /` - API info
+- `GET /health` - Health check
+- `GET /api/recipes` - Proxy to Drizzle API
+- `GET /api/restaurants` - Proxy to Drizzle API
+- `GET /api/users` - Proxy to Drizzle API
+
+## Frontend Configuration
+
+The frontend can connect to either:
+- **Drizzle API directly** (faster, recommended): `http://localhost:3000`
+- **FastAPI proxy**: `http://localhost:8000`
+
+Set in `eRecipe/.env`:
+```
+VITE_API_URL=http://localhost:8000
+VITE_DRIZZLE_API_URL=http://localhost:3000
+```
+
+## Database
+
+- **Development**: SQLite (`./local.db`)
+- **Production**: PostgreSQL (Neon/PlanetScale)
+
+Update `drizzle.config.ts` and `src/db/index.ts` for production PostgreSQL setup.
+
+## Development Workflow
+
+1. Make schema changes in `src/db/schema/index.ts`
+2. Generate migration: `npm run db:generate`
+3. Apply migration: `npm run db:migrate`
+4. Restart servers to see changes
