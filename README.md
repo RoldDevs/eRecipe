@@ -1,4 +1,4 @@
-# eRecipe Frontend
+# eRecipe
 
 Frontend application for the eRecipe e-commerce platform built with SvelteKit and Tailwind CSS.
 
