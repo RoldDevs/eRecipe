@@ -4,6 +4,7 @@
 
 - **Framework:** SvelteKit
 - **Styling:** Tailwind CSS
+- **Backend** FastAPI (Python), Drizzle localdb for development
 - **Language:** TypeScript
 - **Database:** Drizzle ORM (SQLite for dev, PostgreSQL/Neon/PlanetScale for production)
 - **Deployment:** Vercel (recommended)
