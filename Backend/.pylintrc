@@ -24,7 +24,7 @@ py-version=3.11
 
 # When enabled, pylint would attempt to guess common misconfiguration and emit
 # user-friendly hints instead of false-positive error messages.
-suggestion-mode=yes
+# suggestion-mode=yes  # Removed: not supported in current pylint version
 
 [MESSAGES CONTROL]
 # Only show warnings with the listed confidence levels. Leave empty to show
@@ -331,7 +331,7 @@ ignore-none=yes
 # checks whenever an opaque object is returned when inferring. The inference
 # can return multiple potential results and evaluate the first one. Non-opaque
 # results are ignored.
-ignore-on-first-result=yes
+# ignore-on-first-result=yes  # Removed: not supported in current pylint version
 
 # List of class names for which member attributes should not be checked (useful
 # for classes with dynamically set attributes). This supports the use of
@@ -393,11 +393,11 @@ redefining-builtins-modules=six.moves,past.builtins,future.builtins,builtins,io
 # List of variable names used for the main module. These variables are
 # considered as read-only globals and their assignments won't trigger unused-
 # variable warnings.
-main-module-variable-names=
+# main-module-variable-names=  # Removed: not supported in current pylint version
 
 [EXCEPTIONS]
 # Exceptions that will emit a warning when being caught. Defaults to
-# "BaseException, Exception".
-overgeneral-exceptions=BaseException,
-                       Exception
+# "BaseException, Exception". Must use fully qualified names.
+overgeneral-exceptions=builtins.BaseException,
+                       builtins.Exception
 

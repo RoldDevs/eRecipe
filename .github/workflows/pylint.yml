@@ -25,6 +25,10 @@ jobs:
           pip install -r requirements.txt
           pip install pylint
       
+      - name: Show pylint version
+        working-directory: ./Backend
+        run: pylint --version
+      
       - name: Analysing the code with pylint
         working-directory: ./Backend
         run: |
