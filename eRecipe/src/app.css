@@ -44,4 +44,26 @@
 	::-webkit-scrollbar-thumb:hover {
 		@apply bg-primary-light;
 	}
+
+	/* Parallax performance optimization */
+	.parallax-element {
+		will-change: transform;
+		transform: translateZ(0);
+		backface-visibility: hidden;
+		perspective: 1000px;
+	}
+
+	/* Smooth parallax transitions */
+	@media (prefers-reduced-motion: no-preference) {
+		.parallax-element {
+			transition: transform 0.1s ease-out;
+		}
+	}
+
+	/* Disable parallax for users who prefer reduced motion */
+	@media (prefers-reduced-motion: reduce) {
+		.parallax-element {
+			transform: none !important;
+		}
+	}
 }

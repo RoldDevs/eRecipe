@@ -2,16 +2,37 @@
 	import { onMount } from 'svelte';
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
-	import { createParallaxEffect } from '$lib/utils/animations';
+	import { createMultipleParallaxEffects } from '$lib/utils/animations';
 
 	let heroImage: HTMLElement;
-	let recipeCards: HTMLElement;
+	let recipesBg: HTMLElement;
+	let restaurantsBg: HTMLElement;
+	let aboutImage: HTMLElement;
 	let parallaxCleanup: (() => void) | null = null;
 
 	onMount(() => {
-		if (heroImage) {
-			parallaxCleanup = createParallaxEffect(heroImage, 0.3);
-		}
+		// Create parallax effects for background elements only
+		// Use setTimeout to ensure all elements are rendered
+		setTimeout(() => {
+			const parallaxElements: Array<{ element: HTMLElement; speed: number }> = [];
+			
+			if (heroImage) {
+				parallaxElements.push({ element: heroImage, speed: 0.5 });
+			}
+			if (recipesBg) {
+				parallaxElements.push({ element: recipesBg, speed: 0.3 });
+			}
+			if (restaurantsBg) {
+				parallaxElements.push({ element: restaurantsBg, speed: 0.3 });
+			}
+			if (aboutImage) {
+				parallaxElements.push({ element: aboutImage, speed: 0.4 });
+			}
+
+			if (parallaxElements.length > 0) {
+				parallaxCleanup = createMultipleParallaxEffects(parallaxElements);
+			}
+		}, 100);
 
 		// Intersection Observer for fade-in animations
 		// Use a small delay to ensure DOM is ready
@@ -78,7 +99,7 @@
 		<section class="relative h-screen flex items-center justify-center overflow-hidden">
 			<div
 				bind:this={heroImage}
-				class="absolute inset-0 bg-gradient-to-r from-primary to-primary-light opacity-90"
+				class="parallax-element absolute inset-0 bg-gradient-to-r from-primary to-primary-light opacity-90"
 			>
 				<div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1920')] bg-cover bg-center opacity-30"></div>
 			</div>
@@ -109,8 +130,12 @@
 		</section>
 
 		<!-- Featured Recipes Section -->
-		<section id="recipes" class="py-20 bg-primary-cream">
-			<div class="container mx-auto px-4">
+		<section id="recipes" class="py-20 bg-primary-cream relative overflow-hidden">
+			<!-- Parallax background element -->
+			<div bind:this={recipesBg} class="parallax-element absolute inset-0 opacity-10 pointer-events-none">
+				<div class="absolute inset-0 bg-gradient-to-br from-primary to-primary-light"></div>
+			</div>
+			<div class="container mx-auto px-4 relative z-10">
 				<div class="text-center mb-12 fade-in-on-scroll">
 					<h2 class="text-4xl md:text-5xl font-display font-bold text-gray-800 mb-4">
 						Featured Recipes
@@ -150,8 +175,12 @@
 		</section>
 
 		<!-- Restaurants Section -->
-		<section id="restaurants" class="py-20 bg-white">
-			<div class="container mx-auto px-4">
+		<section id="restaurants" class="py-20 bg-white relative overflow-hidden">
+			<!-- Parallax background element -->
+			<div bind:this={restaurantsBg} class="parallax-element absolute inset-0 opacity-5 pointer-events-none">
+				<div class="absolute inset-0 bg-gradient-to-br from-primary-pale to-primary-cream"></div>
+			</div>
+			<div class="container mx-auto px-4 relative z-10">
 				<div class="text-center mb-12 fade-in-on-scroll">
 					<h2 class="text-4xl md:text-5xl font-display font-bold text-gray-800 mb-4">
 						Top Restaurants
@@ -165,7 +194,12 @@
 					{#each Array(4) as _, i}
 						<div class="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-all duration-300 fade-in-on-scroll">
 							<div class="w-16 h-16 bg-primary rounded-full mx-auto mb-4 flex items-center justify-center">
-								<span class="text-2xl">🍽️</span>
+								<!-- Restaurant SVG Icon -->
+								<svg class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M3 21H5V9H3V21ZM7 21H9V13H7V21ZM11 21H13V17H11V21ZM15 21H17V9H15V21ZM19 21H21V5H19V21Z" fill="currentColor"/>
+									<path d="M12 2C10.34 2 9 3.34 9 5V7H15V5C15 3.34 13.66 2 12 2Z" fill="currentColor" opacity="0.8"/>
+									<circle cx="12" cy="4" r="1.5" fill="white"/>
+								</svg>
 							</div>
 							<h3 class="text-xl font-bold text-center text-gray-800 mb-2">Restaurant {i + 1}</h3>
 							<p class="text-gray-600 text-center text-sm mb-4">4.5 ⭐ (120 reviews)</p>
@@ -201,8 +235,8 @@
 		</section>
 
 		<!-- About Section -->
-		<section id="about" class="py-20 bg-white">
-			<div class="container mx-auto px-4">
+		<section id="about" class="py-20 bg-white relative overflow-hidden">
+			<div class="container mx-auto px-4 relative z-10">
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 					<div class="fade-in-on-scroll">
 						<h2 class="text-4xl md:text-5xl font-display font-bold text-gray-800 mb-6">
@@ -220,9 +254,32 @@
 					</div>
 					<div class="fade-in-on-scroll">
 						<div class="relative h-96 rounded-2xl overflow-hidden shadow-xl">
-							<div class="absolute inset-0 bg-gradient-to-br from-primary to-primary-light"></div>
-							<div class="absolute inset-0 flex items-center justify-center">
-								<span class="text-8xl">👨‍🍳</span>
+							<div bind:this={aboutImage} class="parallax-element absolute inset-0 bg-gradient-to-br from-primary to-primary-light"></div>
+							<div class="absolute inset-0 flex items-center justify-center p-8 z-10">
+								<!-- Chef SVG Illustration -->
+								<svg class="w-full h-full text-white" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<!-- Chef Hat -->
+									<path d="M100 15 C75 15, 55 25, 55 50 L55 65 C55 75, 65 85, 75 85 L125 85 C135 85, 145 75, 145 65 L145 50 C145 25, 125 15, 100 15 Z" fill="currentColor" opacity="0.95"/>
+									<path d="M100 15 C75 15, 55 25, 55 50 L55 65 C55 75, 65 85, 75 85 L125 85 C135 85, 145 75, 145 65 L145 50 C145 25, 125 15, 100 15 Z" stroke="white" stroke-width="2" opacity="0.3"/>
+									<!-- Hat Band -->
+									<rect x="70" y="75" width="60" height="8" rx="4" fill="white" opacity="0.4"/>
+									<!-- Chef Face -->
+									<circle cx="100" cy="105" r="25" fill="currentColor" opacity="0.9"/>
+									<!-- Eyes -->
+									<circle cx="92" cy="100" r="3" fill="white"/>
+									<circle cx="108" cy="100" r="3" fill="white"/>
+									<!-- Smile -->
+									<path d="M90 115 Q100 120 110 115" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+									<!-- Chef Body/Apron -->
+									<path d="M70 130 L70 175 C70 185, 80 195, 90 195 L110 195 C120 195, 130 185, 130 175 L130 130 Z" fill="currentColor" opacity="0.9"/>
+									<path d="M75 140 L125 140 L125 175 C125 180, 120 185, 115 185 L85 185 C80 185, 75 180, 75 175 Z" fill="white" opacity="0.3"/>
+									<!-- Chef Arms -->
+									<ellipse cx="50" cy="140" rx="15" ry="25" fill="currentColor" opacity="0.9"/>
+									<ellipse cx="150" cy="140" rx="15" ry="25" fill="currentColor" opacity="0.9"/>
+									<!-- Cooking Utensil (Spatula) -->
+									<path d="M100 145 L100 165 M95 145 L105 145" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+									<circle cx="100" cy="150" r="4" fill="white" opacity="0.6"/>
+								</svg>
 							</div>
 						</div>
 					</div>

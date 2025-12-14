@@ -1,25 +1,51 @@
 // API configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-const DRIZZLE_API_URL = import.meta.env.VITE_DRIZZLE_API_URL || 'http://localhost:3000';
+// @ts-ignore - Vite environment variables
+const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:8000';
+// @ts-ignore - Vite environment variables
+const DRIZZLE_API_URL = import.meta.env?.VITE_DRIZZLE_API_URL || 'http://localhost:3000';
 
 // Use Drizzle API directly (faster) or FastAPI proxy
 const USE_DRIZZLE_DIRECT = true;
 const BASE_URL = USE_DRIZZLE_DIRECT ? DRIZZLE_API_URL : API_BASE_URL;
 
 async function fetchAPI(endpoint: string, options?: RequestInit) {
-	const response = await fetch(`${BASE_URL}${endpoint}`, {
-		...options,
-		headers: {
-			'Content-Type': 'application/json',
-			...options?.headers,
-		},
-	});
+	const url = `${BASE_URL}${endpoint}`;
+	
+	try {
+		const response = await fetch(url, {
+			...options,
+			headers: {
+				'Content-Type': 'application/json',
+				...options?.headers,
+			},
+		});
 
-	if (!response.ok) {
-		throw new Error(`API error: ${response.statusText}`);
+		if (!response.ok) {
+			const errorData = await response.json().catch(() => ({ error: response.statusText }));
+			const error = new Error(errorData.error || `API error: ${response.statusText}`);
+			throw error;
+		}
+
+		return response.json();
+	} catch (error: any) {
+		// Handle network errors (server not running, CORS, etc.)
+		const isNetworkError = 
+			error.name === 'TypeError' || 
+			error.message?.includes('fetch') || 
+			error.message?.includes('Failed to fetch') ||
+			error.message?.includes('NetworkError') ||
+			error.message?.includes('Network request failed');
+			
+		if (isNetworkError) {
+			const errorMessage = error.message || 'Network error';
+			console.error(`[API Error] Failed to fetch ${url}:`, errorMessage);
+			throw new Error(
+				`Cannot connect to backend server at ${BASE_URL}${endpoint}. Error: ${errorMessage}. Please make sure the Drizzle API server is running on port 3000.`
+			);
+		}
+		// Re-throw other errors
+		throw error;
 	}
-
-	return response.json();
 }
 
 // Health check
@@ -74,4 +100,27 @@ export async function getPosts() {
 // Orders
 export async function getOrders() {
 	return fetchAPI('/api/orders');
+}
+
+// Authentication
+export async function signup(data: { email: string; password: string; fullName?: string }) {
+	return fetchAPI('/api/users/signup', {
+		method: 'POST',
+		body: JSON.stringify(data)
+	});
+}
+
+export async function signin(data: { email: string; password: string }) {
+	return fetchAPI('/api/users/signin', {
+		method: 'POST',
+		body: JSON.stringify(data)
+	});
+}
+
+export async function getCurrentUser(token: string) {
+	return fetchAPI('/api/users/me', {
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	});
 }
