@@ -55,15 +55,15 @@
 					<p class="text-sm font-medium">Follow Us</p>
 					<div class="flex space-x-4">
 						{#each socialLinks as link}
-							<a
-								href="#"
-								class="text-gray-600 hover:text-primary transition-colors"
+							<button
+								type="button"
+								class="text-gray-600 hover:text-primary transition-colors p-1"
 								aria-label={link.name}
 							>
 								<svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
 									<path d={link.icon} />
 								</svg>
-							</a>
+							</button>
 						{/each}
 					</div>
 				</div>
@@ -74,12 +74,12 @@
 				<ul class="space-y-2">
 					{#each recipeCategories as category}
 						<li>
-							<a
-								href="#"
-								class="text-sm hover:text-primary transition-colors uppercase"
+							<button
+								type="button"
+								class="text-sm hover:text-primary transition-colors uppercase text-left"
 							>
 								{category}
-							</a>
+							</button>
 						</li>
 					{/each}
 				</ul>
@@ -90,12 +90,12 @@
 				<ul class="space-y-2">
 					{#each aboutLinks as link}
 						<li>
-							<a
-								href="#"
-								class="text-sm hover:text-primary transition-colors"
+							<button
+								type="button"
+								class="text-sm hover:text-primary transition-colors text-left"
 							>
 								{link}
-							</a>
+							</button>
 						</li>
 					{/each}
 				</ul>
@@ -106,12 +106,12 @@
 				<ul class="space-y-2">
 					{#each editorialLinks as link}
 						<li>
-							<a
-								href="#"
-								class="text-sm hover:text-primary transition-colors"
+							<button
+								type="button"
+								class="text-sm hover:text-primary transition-colors text-left"
 							>
 								{link}
-							</a>
+							</button>
 						</li>
 					{/each}
 				</ul>

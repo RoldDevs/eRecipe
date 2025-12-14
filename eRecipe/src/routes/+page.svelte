@@ -14,23 +14,26 @@
 		}
 
 		// Intersection Observer for fade-in animations
-		const observerOptions = {
-			threshold: 0.1,
-			rootMargin: '0px 0px -50px 0px'
-		};
+		// Use a small delay to ensure DOM is ready
+		setTimeout(() => {
+			const observerOptions = {
+				threshold: 0.1,
+				rootMargin: '0px 0px -50px 0px'
+			};
 
-		const observer = new IntersectionObserver((entries) => {
-			entries.forEach((entry) => {
-				if (entry.isIntersecting) {
-					entry.target.classList.add('animate-fade-in');
-					observer.unobserve(entry.target);
-				}
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('animate-fade-in');
+						observer.unobserve(entry.target);
+					}
+				});
+			}, observerOptions);
+
+			document.querySelectorAll('.fade-in-on-scroll').forEach((el) => {
+				observer.observe(el);
 			});
-		}, observerOptions);
-
-		document.querySelectorAll('.fade-in-on-scroll').forEach((el) => {
-			observer.observe(el);
-		});
+		}, 100);
 
 		return () => {
 			if (parallaxCleanup) parallaxCleanup();
@@ -237,7 +240,7 @@
 		transition: opacity 0.6s ease-in-out;
 	}
 
-	.fade-in-on-scroll.animate-fade-in {
+	:global(.fade-in-on-scroll.animate-fade-in) {
 		opacity: 1;
 	}
 </style>

@@ -42,8 +42,8 @@ app.use('/api/orders', orderRoutes);
 
 // Start server
 app.listen(PORT, () => {
-	console.log(`🚀 Drizzle API server running on http://localhost:${PORT}`);
-	console.log(`📊 Database: ${process.env.DATABASE_URL || './local.db'}`);
+	console.log(`Drizzle API server running on http://localhost:${PORT}`);
+	console.log(`Database: ${process.env.DATABASE_URL || './local.db'}`);
 });
 
 // Extend Express Request type
