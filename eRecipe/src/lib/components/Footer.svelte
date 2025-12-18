@@ -20,11 +20,11 @@
 	];
 
 	const aboutLinks = [
-		'About Us',
-		'Privacy Policy',
-		'Terms of Service',
-		'Careers',
-		'Manage Your Magazine Subscription'
+		{ name: 'About Us', href: '#' },
+		{ name: 'Privacy Policy', href: '/privacy' },
+		{ name: 'Terms of Service', href: '/terms' },
+		{ name: 'Careers', href: '#' },
+		{ name: 'Manage Your Magazine Subscription', href: '#' }
 	];
 
 	const editorialLinks = [
@@ -90,12 +90,21 @@
 				<ul class="space-y-2">
 					{#each aboutLinks as link}
 						<li>
-							<button
-								type="button"
-								class="text-sm hover:text-primary transition-colors text-left"
-							>
-								{link}
-							</button>
+							{#if link.href === '#'}
+								<button
+									type="button"
+									class="text-sm hover:text-primary transition-colors text-left"
+								>
+									{link.name}
+								</button>
+							{:else}
+								<a
+									href={link.href}
+									class="text-sm hover:text-primary transition-colors text-left"
+								>
+									{link.name}
+								</a>
+							{/if}
 						</li>
 					{/each}
 				</ul>

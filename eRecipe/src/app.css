@@ -8,7 +8,12 @@
 	}
 
 	body {
-		@apply text-gray-800 antialiased;
+		@apply text-gray-800 antialiased bg-gradient-to-br from-primary-pale via-primary-cream to-white;
+		min-height: 100vh;
+	}
+	
+	html {
+		@apply bg-primary-pale;
 	}
 
 	* {

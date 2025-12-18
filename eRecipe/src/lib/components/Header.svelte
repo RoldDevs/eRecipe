@@ -10,15 +10,16 @@
 	let mobileMenuOpen = false;
 
 	// Check if current page is an auth page or error page
-	$: isAuthPage = $page.url.pathname === '/signin' || $page.url.pathname === '/signup';
+	$: isAuthPage = $page.url.pathname === '/signin' || $page.url.pathname === '/signup' || $page.url.pathname === '/forgot-password';
+	$: isLegalPage = $page.url.pathname === '/terms' || $page.url.pathname === '/privacy';
 	$: isErrorPage = $page.status === 404 || $page.status >= 500;
 	$: isHomePage = $page.url.pathname === '/';
-	// Use dark text if scrolled OR on auth/error pages
-	$: useDarkText = scrolled || isAuthPage || isErrorPage;
+	// Use dark text if scrolled OR on auth/error/legal pages
+	$: useDarkText = scrolled || isAuthPage || isErrorPage || isLegalPage;
 
 	onMount(() => {
-		// On auth/error pages, start with scrolled state to show white background
-		if (isAuthPage || isErrorPage) {
+		// On auth/error/legal pages, start with scrolled state to show white background
+		if (isAuthPage || isErrorPage || isLegalPage) {
 			scrolled = true;
 		}
 

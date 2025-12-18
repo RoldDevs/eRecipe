@@ -124,3 +124,10 @@ export async function getCurrentUser(token: string) {
 		}
 	});
 }
+
+export async function forgotPassword(email: string) {
+	return fetchAPI('/api/users/forgot-password', {
+		method: 'POST',
+		body: JSON.stringify({ email })
+	});
+}

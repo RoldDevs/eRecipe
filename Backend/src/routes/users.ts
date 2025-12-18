@@ -148,6 +148,48 @@ router.get('/me', async (req, res) => {
 	}
 });
 
+// Forgot password - Request password reset
+router.post('/forgot-password', async (req, res) => {
+	try {
+		const { email } = req.body;
+
+		if (!email) {
+			return res.status(400).json({ error: 'Email is required' });
+		}
+
+		// Find user by email
+		const user = await req.db
+			.select()
+			.from(users)
+			.where(eq(users.email, email))
+			.limit(1);
+
+		// Always return success for security (don't reveal if email exists)
+		// In production, you would:
+		// 1. Generate a reset token
+		// 2. Store it in the database with an expiry
+		// 3. Send email with reset link using Nodemailer or a service like SendGrid/Mailgun
+
+		if (user.length > 0) {
+			// Log for development - in production, send actual email
+			console.log(`[Password Reset] Reset requested for: ${email}`);
+			console.log(`[Password Reset] User found: ${user[0].username}`);
+			// TODO: Implement actual email sending with Nodemailer
+			// Example: await sendPasswordResetEmail(email, resetToken);
+		}
+
+		res.json({ 
+			message: 'If an account exists with this email, you will receive password reset instructions.' 
+		});
+	} catch (error) {
+		console.error('Forgot password error:', error);
+		// Still return success for security
+		res.json({ 
+			message: 'If an account exists with this email, you will receive password reset instructions.' 
+		});
+	}
+});
+
 // Get all users
 router.get('/', async (req, res) => {
 	try {
